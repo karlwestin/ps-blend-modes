@@ -56,7 +56,6 @@
 
 			<strong>Source</strong><br />
 
-			<div class="thumb"><img id="texture2" width="75" /></div>
 
 			Color <select id="sourceColor" onkeyup="update();" onchange="update();"> 
 				<option>ZERO</option>
@@ -98,7 +97,6 @@
 
 			<strong>Destination</strong><br />
 
-			<div class="thumb"><img id="texture1" width="75" /></div>
 
 			Color <select id="destinationColor" onkeyup="update();" onchange="update();"> 
 				<option>ZERO</option>
@@ -142,9 +140,6 @@
 			
 
 		</td></tr></table>
-
-		<br />
-		<textarea id="code" style="width:700px;height:80px;"></textarea>
 
 		<script id="vs" type="x-shader/x-vertex">
 
@@ -213,30 +208,6 @@
 
 				}
 
-				equations = [
-					"gl.FUNC_ADD",
-					"gl.FUNC_SUBTRACT",
-					"gl.FUNC_REVERSE_SUBTRACT"
-				];
-
-				functions = [
-					"gl.ZERO",
-					"gl.ONE",
-					"gl.SRC_COLOR",
-					"gl.ONE_MINUS_SRC_COLOR",
-					"gl.DST_COLOR",
-					"gl.ONE_MINUS_DST_COLOR",
-					"gl.SRC_ALPHA",
-					"gl.ONE_MINUS_SRC_ALPHA",
-					"gl.DST_ALPHA",
-					"gl.ONE_MINUS_DST_ALPHA",
-					"gl.SRC_ALPHA_SATURATE",
-					"gl.CONSTANT_COLOR",
-					"gl.ONE_MINUS_CONSTANT_COLOR",
-					"gl.CONSTANT_ALPHA",
-					"gl.ONE_MINUS_CONSTANT_ALPHA"
-				];
-
 				// Create Vertex buffer (2 triangles)
 
 				buffer = gl.createBuffer();
@@ -252,10 +223,8 @@
 
 				currentProgram = createProgram( vertex_shader, fragment_shader );
 
-				document.getElementById( 'texture1' ).src = 'files/dst.png';
 				texture1 = loadTexture( 'files/txt1.png' );
 
-				document.getElementById( 'texture2' ).src = 'files/src.png';
 				texture2 = loadTexture( 'files/txt2.png' );
 
 				onWindowResize();
@@ -355,12 +324,7 @@
 			}
 
 			function update() {
-
-				var textarea = document.getElementById( 'code' );
-				textarea.innerHTML = "gl.enable( gl.BLEND );\ngl.blendEquationSeparate( " + equations[ document.getElementById( 'equationColor' ).selectedIndex ] + ", " + equations[ document.getElementById( 'equationAlpha' ).selectedIndex ] + " );\ngl.blendFuncSeparate( " + functions[ document.getElementById( 'sourceColor' ).selectedIndex ] + ", " + functions[ document.getElementById( 'destinationColor' ).selectedIndex ] + ", " + functions[ document.getElementById( 'sourceAlpha' ).selectedIndex ] + ", " + functions[ document.getElementById( 'destinationAlpha' ).selectedIndex ] + " );";
-
 				render();
-
 			}
 
 			function render() {
