@@ -15,14 +15,12 @@
 				width: 400px;
 				height: 400px;
 				margin-right: 20px;
-				background: url("files/bg.png");
 			}
 
 			.thumb {
 				width: 75px;
 				height: 75px;
 				margin-right: 10px;
-				background: url("files/bg.png");
 			}
 
 		</style>
@@ -255,10 +253,10 @@
 				currentProgram = createProgram( vertex_shader, fragment_shader );
 
 				document.getElementById( 'texture1' ).src = 'files/dst.png';
-				texture1 = loadTexture( 'files/dst.png' );
+				texture1 = loadTexture( 'files/txt1.png' );
 
 				document.getElementById( 'texture2' ).src = 'files/src.png';
-				texture2 = loadTexture( 'files/src.png' );
+				texture2 = loadTexture( 'files/txt2.png' );
 
 				onWindowResize();
 				window.addEventListener( 'resize', onWindowResize, false );
@@ -398,18 +396,8 @@
 
 				//
 
-				gl.blendEquationSeparate(
-					eval( equations[ document.getElementById( 'equationColor' ).selectedIndex ] ),
-					eval( equations[ document.getElementById( 'equationAlpha' ).selectedIndex ] )
-				);
-
-				gl.blendFuncSeparate(
-					eval( functions[ document.getElementById( 'sourceColor' ).selectedIndex ] ),
-					eval( functions[ document.getElementById( 'destinationColor' ).selectedIndex ] ),
-					eval( functions[ document.getElementById( 'sourceAlpha' ).selectedIndex ] ),
-					eval( functions[ document.getElementById( 'destinationAlpha' ).selectedIndex ] )
-				);
-
+			  gl.blendEquationSeparate( gl.FUNC_ADD, gl.FUNC_ADD );
+        gl.blendFuncSeparate( gl.SRC_ALPHA_SATURATE, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA );	
 				gl.bindTexture( gl.TEXTURE_2D, texture2 );
 
 				// Render geometry
