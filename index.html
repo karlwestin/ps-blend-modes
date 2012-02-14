@@ -52,7 +52,7 @@
 			uniform sampler2D texture;
 
 			void main( void ) {
-        gl_FragColor = texture2D(texture, vec2(vTextureCoord.s, vTextureCoord.t)).rgba;				
+        gl_FragColor = texture2D(texture, vec2(vTextureCoord.s, vTextureCoord.t)).rgba;
 			}
 
 		</script>
@@ -143,10 +143,10 @@
 				textureBuffer = gl.createBuffer();
 				gl.bindBuffer( gl.ARRAY_BUFFER, textureBuffer );
 				gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( [
-                    0.0, 0.0,
-                    1.0, 0.0,
-                    1.0, 1.0,
-                    0.0, 1.0,
+            0.0, 0.0,
+            1.0, 0.0,
+            1.0, 1.0,
+            0.0, 1.0
 				] ), gl.STATIC_DRAW );
 				
 				// Create Program
@@ -287,7 +287,7 @@
 				
         mat4.identity(mvMatrix);	                
         mvPushMatrix();
-        mat4.rotate(mvMatrix, Math.PI/2*r, [0,1,0])			
+        mat4.rotate(mvMatrix, Math.PI/2*r, [0,0,1])			
         gl.uniformMatrix4fv(currentProgram.mvMatrix, false, mvMatrix); 
         
         gl.vertexAttribPointer(textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
