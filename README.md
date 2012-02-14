@@ -1,4 +1,9 @@
-WebGL "port" of [this](http://www.andersriggelsen.dk/OpenGL/).
+Photoshop Blend Modes – Example
+=======
 
-[gl.blendFunc()](http://mrdoob.com/lab/javascript/webgl/blending/blendfunc.html)  
-[gl.blendFuncSeparate()](http://mrdoob.com/lab/javascript/webgl/blending/blendfuncseparate.html)
+Multiplying two images on top of each other using WebGL.
+
+Script is a fork of [this project by @mrdoob](http://mrdoob.com/lab/javascript/webgl/blending/blendfuncseparate.html)
+
+Please contact me on [twitter.com/karlwestin](http://twitter.com/karlwestin) if you'd like to know more!
+
