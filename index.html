@@ -29,29 +29,35 @@
 			<div id="effect"></div>
 
         <script src="gl-matrix.js"></script>
-        <script src="core/embed.js"></script>        
+<!--        <script src="core/embed.js"></script>        -->
 		<script id="vs" type="x-shader/x-vertex">
 
 			attribute vec3 position;
+            attribute vec2 aTextureCoord;
 
             uniform mat4 uMVMatrix;
+            
+            varying mediump vec2 vTextureCoord;            
 
 			void main() {
 
 				gl_Position = uMVMatrix * vec4( position, 1.0 );
+				vTextureCoord = aTextureCoord;
 
 			}
 
 		</script>
 
 		<script id="fs" type="x-shader/x-fragment">
+            varying mediump vec2 vTextureCoord; 
 
 			uniform vec2 resolution;
 			uniform sampler2D texture;
 
 			void main( void ) {
 
-				gl_FragColor = texture2D( texture, gl_FragCoord.xy / resolution.xy ).rgba;
+				//gl_FragColor = texture2D( texture, gl_FragCoord.xy / resolution.xy ).rgba;
+                gl_FragColor = texture2D(texture, vec2(vTextureCoord.s, vTextureCoord.t)).rgba;				
 
 			}
 
@@ -69,9 +75,25 @@
                         window.setTimeout(callback, 1000 / 60);
                       };
            })();
+                   
+          var mvMatrixStack = [],
+              mvMatrix = mat4.create();
+        
+          function mvPushMatrix() {
+            var copy = mat4.create();
+            mat4.set(mvMatrix, copy);
+            mvMatrixStack.push(copy);
+          }
+        
+          function mvPopMatrix() {
+            if (mvMatrixStack.length == 0) {
+              throw "Invalid popMatrix!";
+            }
+            mvMatrix = mvMatrixStack.pop();
+          }
 		
 
-			var effectDiv, sourceDiv, canvas, gl, buffer,
+			var effectDiv, sourceDiv, canvas, gl, buffer, textureBuffer,
 			vertex_shader, fragment_shader, currentProgram,
 			vertexPositionLocation, texture1, texture2, textureLocation,
 			parameters = { screenWidth: 0, screenHeight: 0 },
@@ -121,7 +143,18 @@
 					  1.0, - 1.0, 1.0,
 					  1.0, - 1.0, 1.0
 				] ), gl.STATIC_DRAW );
-
+				
+				// Create Texture Buffer
+				
+				textureBuffer = gl.createBuffer();
+				gl.bindBuffer( gl.ARRAY_BUFFER, textureBuffer );
+				gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( [
+                    0.0, 0.0,
+                    1.0, 0.0,
+                    1.0, 1.0,
+                    0.0, 1.0,
+				] ), gl.STATIC_DRAW );
+				
 				// Create Program
 
 				currentProgram = createProgram( vertex_shader, fragment_shader );
@@ -247,6 +280,9 @@
 
 				vertexPositionLocation = gl.getAttribLocation( currentProgram, 'position' );
 				textureLocation = gl.getUniformLocation( currentProgram, 'texture' );
+                textureCoordAttribute = gl.getAttribLocation(currentProgram, 'aTextureCoord');  				
+
+
 
 				// Set values to program variables
 
@@ -261,10 +297,10 @@
 				gl.bindBuffer( gl.ARRAY_BUFFER, buffer );
 				gl.vertexAttribPointer( vertexPositionLocation, 2, gl.FLOAT, false, 0, 0 );
 				
-
-				var mvMatrix = mat4.create();
                 mat4.identity(mvMatrix);	                
-                mat4.rotate(mvMatrix, Math.PI/3, [0,1,0])			
+                
+                mvPushMatrix();
+                mat4.rotate(mvMatrix, Math.PI/2*r, [0,1,0])			
 
                 gl.uniformMatrix4fv(currentProgram.mvMatrix, false, mvMatrix);
                 
@@ -273,13 +309,16 @@
 				gl.drawArrays( gl.TRIANGLES, 0, 6 );
 				gl.disableVertexAttribArray( vertexPositionLocation );
 
-				//
+				
+                gl.enableVertexAttribArray(textureCoordAttribute);
 
 			    gl.blendEquationSeparate( gl.FUNC_ADD, gl.FUNC_ADD );
                 gl.blendFuncSeparate( gl.SRC_ALPHA_SATURATE, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA );	
 				gl.bindTexture( gl.TEXTURE_2D, texture2 );
 
 				// Render geometry
+                mvPopMatrix();
+                gl.uniformMatrix4fv(currentProgram.mvMatrix, false, mvMatrix);
 
 				gl.bindBuffer( gl.ARRAY_BUFFER, buffer );
 				gl.vertexAttribPointer( vertexPositionLocation, 2, gl.FLOAT, false, 0, 0 );
@@ -292,11 +331,11 @@
             var r = 0;
             
             (function animloop() {
-                //requestAnimFrame(animloop);
+                requestAnimFrame(animloop);
                 
                 render(r+=0.05);
                 
-                setTimeout(animloop, 2000);                
+                //setTimeout(animloop, 1000);                
             })();        
 
 
