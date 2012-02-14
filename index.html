@@ -296,6 +296,7 @@
 				gl.vertexAttribPointer( vertexPositionLocation, 2, gl.FLOAT, false, 0, 0 );
 				
         mat4.identity(mvMatrix);	                
+        mat4.scale(mvMatrix, [0.8, 0.8, 0.8]);
         mvPushMatrix();
         mat4.rotate(mvMatrix, Math.PI/2*r, [0,0,1])			
         gl.uniformMatrix4fv(currentProgram.mvMatrix, false, mvMatrix); 
@@ -312,21 +313,25 @@
 				gl.bindBuffer( gl.ARRAY_BUFFER, buffer );
 				gl.drawArrays( gl.TRIANGLES, 0, 6 );
 
-/*
+
         gl.blendEquationSeparate( gl.FUNC_ADD, gl.FUNC_ADD );
         gl.blendFuncSeparate( gl.SRC_ALPHA_SATURATE, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA );	
 				gl.bindTexture( gl.TEXTURE_2D, texture2 );
 
 				// Render geometry
-                mvPopMatrix();
-                gl.uniformMatrix4fv(currentProgram.mvMatrix, false, mvMatrix);
+        mvPopMatrix();
+        mvPushMatrix();
+        mat4.rotate(mvMatrix, Math.PI/2*-r, [0,0,1])			
+        gl.uniformMatrix4fv(currentProgram.mvMatrix, false, mvMatrix);
 
 				gl.bindBuffer( gl.ARRAY_BUFFER, buffer );
 				gl.vertexAttribPointer( vertexPositionLocation, 2, gl.FLOAT, false, 0, 0 );
 				gl.enableVertexAttribArray( vertexPositionLocation );
 				gl.drawArrays( gl.TRIANGLES, 0, 6 );
 				gl.disableVertexAttribArray( vertexPositionLocation );
-*/
+
+        mvPopMatrix();
+
 			}
             
             var r = 0;
