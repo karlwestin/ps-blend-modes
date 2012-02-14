@@ -33,32 +33,26 @@
 		<script id="vs" type="x-shader/x-vertex">
 
 			attribute vec3 position;
-            attribute vec2 aTextureCoord;
+      attribute vec2 aTextureCoord;
 
-            uniform mat4 uMVMatrix;
+      uniform mat4 uMVMatrix;
             
-            varying mediump vec2 vTextureCoord;            
+      varying mediump vec2 vTextureCoord;            
 
 			void main() {
-
 				gl_Position = uMVMatrix * vec4( position, 1.0 );
 				vTextureCoord = aTextureCoord;
-
 			}
 
 		</script>
 
 		<script id="fs" type="x-shader/x-fragment">
-            varying mediump vec2 vTextureCoord; 
+      varying mediump vec2 vTextureCoord; 
 
-			uniform vec2 resolution;
 			uniform sampler2D texture;
 
 			void main( void ) {
-
-				//gl_FragColor = texture2D( texture, gl_FragCoord.xy / resolution.xy ).rgba;
-                gl_FragColor = texture2D(texture, vec2(vTextureCoord.s, vTextureCoord.t)).rgba;				
-
+        gl_FragColor = texture2D(texture, vec2(vTextureCoord.s, vTextureCoord.t)).rgba;				
 			}
 
 		</script>
@@ -237,7 +231,7 @@
 
 				}
 				
-                program.mvMatrix = gl.getUniformLocation(program, "uMVMatrix");				
+        program.mvMatrix = gl.getUniformLocation(program, "uMVMatrix");				
 				return program;
 
 			}
@@ -280,40 +274,33 @@
 
 				vertexPositionLocation = gl.getAttribLocation( currentProgram, 'position' );
 				textureLocation = gl.getUniformLocation( currentProgram, 'texture' );
-                textureCoordAttribute = gl.getAttribLocation(currentProgram, 'aTextureCoord');  				
+        textureCoordAttribute = gl.getAttribLocation(currentProgram, 'aTextureCoord');  				
 
-
-
-				// Set values to program variables
-
-				gl.uniform2f( gl.getUniformLocation( currentProgram, 'resolution' ), parameters.screenWidth, parameters.screenHeight );
-
-				gl.uniform1i( textureLocation, 0 );
 				gl.activeTexture( gl.TEXTURE0 );
 				gl.bindTexture( gl.TEXTURE_2D, texture1 );
+				gl.uniform1i( textureLocation, 0 );
 
 				// Render geometry
 
 				gl.bindBuffer( gl.ARRAY_BUFFER, buffer );
 				gl.vertexAttribPointer( vertexPositionLocation, 2, gl.FLOAT, false, 0, 0 );
 				
-                mat4.identity(mvMatrix);	                
-                
-                mvPushMatrix();
-                mat4.rotate(mvMatrix, Math.PI/2*r, [0,1,0])			
-
-                gl.uniformMatrix4fv(currentProgram.mvMatrix, false, mvMatrix);
-                
+        mat4.identity(mvMatrix);	                
+        mvPushMatrix();
+        mat4.rotate(mvMatrix, Math.PI/2*r, [0,1,0])			
+        gl.uniformMatrix4fv(currentProgram.mvMatrix, false, mvMatrix); 
+        
+        gl.vertexAttribPointer(textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(textureCoordAttribute);
                 
 				gl.enableVertexAttribArray( vertexPositionLocation );
 				gl.drawArrays( gl.TRIANGLES, 0, 6 );
 				gl.disableVertexAttribArray( vertexPositionLocation );
 
 				
-                gl.enableVertexAttribArray(textureCoordAttribute);
 
-			    gl.blendEquationSeparate( gl.FUNC_ADD, gl.FUNC_ADD );
-                gl.blendFuncSeparate( gl.SRC_ALPHA_SATURATE, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA );	
+        gl.blendEquationSeparate( gl.FUNC_ADD, gl.FUNC_ADD );
+        gl.blendFuncSeparate( gl.SRC_ALPHA_SATURATE, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA );	
 				gl.bindTexture( gl.TEXTURE_2D, texture2 );
 
 				// Render geometry
