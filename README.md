@@ -11,7 +11,6 @@ By the way
 
 I'm looking for a web development job from the middle of march! Please contact me on twitter (see link below) if you're interested on working together!
 
-Live example can be seen on [http://karlwestin.com/blend](karlwestin.com/blend).
 
 Script is a fork of [this project by @mrdoob](http://mrdoob.com/lab/javascript/webgl/blending/blendfuncseparate.html)
 
